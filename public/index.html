@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Document</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body class="container">
+    <h1 class="text-center mt-5">Mini Chat</h1>
+
+    <form action="" id="myForm">
+      <div class="row">
+        <div class="col-8">
+          <input
+            type="text"
+            id="idMessage"
+            placeholder="message"
+            class="form-control"
+          />
+        </div>
+        <div class="col-4">
+          <button type="submit" class="btn btn-primary">Send</button>
+        </div>
+      </div>
+    </form>
+
+    <div class="row">
+      <div class="col">
+        <ul id="myMessages" class="mt-2"></ul>
+      </div>
+    </div>
+
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.8.1/socket.io.js"
+      integrity="sha512-8BHxHDLsOHx+flIrQ0DrZcea7MkHqRU5GbTHmbdzMRnAaoCIkZ97PqZcXJkKZckMMhqfoeaJE+DNUVuyoQsO3Q=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script>
+      const socket = io("http://localhost:3000");
+      const myForm = document.getElementById("myForm");
+      const myMessages = document.getElementById("myMessages");
+      const txtBox = document.getElementById("idMessage");
+
+      myForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const message = txtBox.value;
+        socket.emit("message", {
+          txt: message,
+        });
+        txtBox.value = "";
+      });
+
+      socket.on("message", (data) => {
+        myMessages.innerHTML += `<li>${data.txt}</li>`;
+      });
+
+    </script>
+  </body>
+</html>
